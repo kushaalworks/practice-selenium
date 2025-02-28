@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,24 +21,52 @@ public class TestAutomationBlogSpotPractice {
 
 		enterUserDetails("JP", "eaddress@123.com", "9888", "address123");
 
+		System.out.println("***" + "Completed " + "enterUserDetails" + "***");
+
 		// User input: Days to be selected
 		List<String> userSelectedDays = Arrays.asList("monday", "wednesday", "friday");
 
 		selectDays(userSelectedDays);
 
+		System.out.println("***" + "Completed " + "selectDays" + "***");
+
 		String country = "Germany";
 
 		selectCountry(country);
 
+		System.out.println("***" + "Completed " + "selectCountry" + "***");
+
 		String bookName = "Master In Java";
 
-		verifyIfBookNameIsAvailableInTheTable(bookName);
+		boolean isBookAvailable = verifyIfBookNameIsAvailableInTheTable(bookName);
+
+		System.out.println(("Is book " + bookName + " available?" + " " + isBookAvailable));
+
+		System.out.println("***" + "Completed " + "verifyIfBookNameIsAvailableInTheTable");
+
+		// User input: Product to be chosen on the paginated table:
+		String authorName = "Amit";
+
+		printTheBookNamesBasedOnTheAuthorFromTheStaticTable(authorName);
+
+		System.out.println("***" + "Completed " + "printTheBookNamesBasedOnTheAuthorFromTheStaticTable");
 
 		// User input: Product to be chosen on the paginated table:
 		String producToBeChosen = "Soundbar";
 
 		selectProductInThePaginatedTable(producToBeChosen);
 
+		System.out.println("***" + "Completed " + "selectProductInThePaginatedTable");
+
+		String name = "MLuffy";
+
+		boolean isGreetMessageAvailableAfterPromptInteraction = verifyGreetMessageAfterPromptInteraction(name);
+
+		System.out.println("Is greet message available after prompt interaction? "
+				+ isGreetMessageAvailableAfterPromptInteraction);
+
+		System.out.println("***" + "Completed " + "verifyGreetMessageAfterPromptInteraction");
+		
 		// stop();
 
 	}
@@ -84,16 +113,36 @@ public class TestAutomationBlogSpotPractice {
 		dropDown.selectByVisibleText(country);
 	}
 
-	static void verifyIfBookNameIsAvailableInTheTable(String bookName) {
+	static boolean verifyIfBookNameIsAvailableInTheTable(String bookName) {
 		int noOfRows = driver.findElements(By.xpath("//table[@name='BookTable']//tr")).size();
 
-		for (int r = 2; r < noOfRows; r++) {
-			String tableData = driver.findElement(By.xpath("//table[@name='BookTable']//tr[" + r + "]//td[1]"))
+		boolean isBookAvailable = false;
+
+		for (int r = 2; r <= noOfRows; r++) {
+			String bookNameFromTable = driver.findElement(By.xpath("//table[@name='BookTable']//tr[" + r + "]//td[1]"))
 					.getText();
-			if (bookName.equals(tableData)) {
-				System.out.println("BookName: " + tableData);
+			if (bookName.equals(bookNameFromTable)) {
+				System.out.println("BookName: " + bookNameFromTable);
+				isBookAvailable = true;
 			}
 		}
+		return isBookAvailable;
+	}
+
+	static void printTheBookNamesBasedOnTheAuthorFromTheStaticTable(String authorName) {
+		int noOfRows = driver.findElements(By.xpath("//table[@name='BookTable']//tr")).size();
+
+		for (int r = 2; r <= noOfRows; r++) {
+			String authorNameFromTable = driver
+					.findElement(By.xpath("//table[@name='BookTable']//tr[" + r + "]//td[2]")).getText();
+
+			if (authorName.equals(authorNameFromTable)) {
+				String bookNameFromTable = driver
+						.findElement(By.xpath("//table[@name='BookTable']//tr[" + r + "]//td[1]")).getText();
+				System.out.println("Book written by author" + " " + authorName + " : " + bookNameFromTable);
+			}
+		}
+
 	}
 
 	static void selectProductInThePaginatedTable(String productToBeChosen) throws InterruptedException {
@@ -120,6 +169,36 @@ public class TestAutomationBlogSpotPractice {
 			}
 		}
 
+	}
+
+	static boolean verifyGreetMessageAfterPromptInteraction(String name) throws InterruptedException {
+		boolean isGreetMessageDisplayed = false;
+
+		driver.findElement(By.xpath("//button[@id='promptBtn']")).click();
+
+		Alert promptAlert = driver.switchTo().alert();
+
+		String promptAlertText = promptAlert.getText();
+
+		if (promptAlertText.equals("Please enter your name:")) {
+			promptAlert.sendKeys(name);
+			promptAlert.accept();
+		}
+
+		String actualGreetMessage = driver.findElement(By.xpath("//p[@id='demo']")).getText();
+
+		System.out.println("Actual Greet message is: " + actualGreetMessage);
+		
+		String expectedGreetMessage = "Hello " + name + "! How are you today?";
+		
+		System.out.println("Expected Greet message is: " + expectedGreetMessage);
+		
+		if (actualGreetMessage.equals(expectedGreetMessage))
+		{
+			isGreetMessageDisplayed = true;
+		}
+
+		return isGreetMessageDisplayed;
 	}
 
 	static void stop() {
