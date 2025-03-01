@@ -23,6 +23,9 @@ Select a product from a paginated table. (selectProductInThePaginatedTable())
 ✅ Alert Handling
 Checks if the greet message appears after prompt interaction. (verifyGreetMessageAfterPromptInteraction())
 
+✅ Date Picker Handling
+Selects date (past, future) from the date picker.
+
 ## 📂 Class: `TestAutomationBlogSpotPractice.java`
 The `TestAutomationBlogSpotPractice` class contains methods that automate different Selenium tasks. Below is a description of each method.
 
@@ -38,6 +41,8 @@ The `TestAutomationBlogSpotPractice` class contains methods that automate differ
 | `selectProductInThePaginatedTable()`             	           | Selects a specified product from a paginated table. 	        |
 | `verifyGreetMessageAfterPromptInteraction()`       		   | Checks if the greet message appears after prompt interaction. 	|
 | `printTheBookNamesBasedOnTheAuthorFromTheStaticTable()`      | Prints book names by author from the static table. 	        |
+| `selectPastDate()`      									   | Selects a past date from date picker. 	        			    |
+| `selectFutureDate()`     	 								   | Selects a future date from date picker. 	                    |
 | `stop()`             								           | Closes the browser and ends the session. 			  	        |
 
 

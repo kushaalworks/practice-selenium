@@ -49,14 +49,14 @@ public class TestAutomationBlogSpotPractice {
 
 		printTheBookNamesBasedOnTheAuthorFromTheStaticTable(authorName);
 
-		System.out.println("***" + "Completed " + "printTheBookNamesBasedOnTheAuthorFromTheStaticTable");
+		System.out.println("***" + "Completed " + "printTheBookNamesBasedOnTheAuthorFromTheStaticTable" + "***");
 
 		// User input: Product to be chosen on the paginated table:
 		String producToBeChosen = "Soundbar";
 
 		selectProductInThePaginatedTable(producToBeChosen);
 
-		System.out.println("***" + "Completed " + "selectProductInThePaginatedTable");
+		System.out.println("***" + "Completed " + "selectProductInThePaginatedTable" + "***");
 
 		String name = "MLuffy";
 
@@ -65,9 +65,17 @@ public class TestAutomationBlogSpotPractice {
 		System.out.println("Is greet message available after prompt interaction? "
 				+ isGreetMessageAvailableAfterPromptInteraction);
 
-		System.out.println("***" + "Completed " + "verifyGreetMessageAfterPromptInteraction");
-		
-		// stop();
+		System.out.println("***" + "Completed " + "verifyGreetMessageAfterPromptInteraction" + "***");
+
+		selectFutureDate("May", "5", "2025");
+
+		System.out.println("***" + "Completed " + "selectFutureDate" + "***");
+
+//		selectPastDate("May", "5", "2020");
+
+//		System.out.println("***" + "Completed " + "selectPastDate");
+
+//		 stop();
 
 	}
 
@@ -188,17 +196,71 @@ public class TestAutomationBlogSpotPractice {
 		String actualGreetMessage = driver.findElement(By.xpath("//p[@id='demo']")).getText();
 
 		System.out.println("Actual Greet message is: " + actualGreetMessage);
-		
+
 		String expectedGreetMessage = "Hello " + name + "! How are you today?";
-		
+
 		System.out.println("Expected Greet message is: " + expectedGreetMessage);
-		
-		if (actualGreetMessage.equals(expectedGreetMessage))
-		{
+
+		if (actualGreetMessage.equals(expectedGreetMessage)) {
 			isGreetMessageDisplayed = true;
 		}
 
 		return isGreetMessageDisplayed;
+	}
+
+	static void selectFutureDate(String month, String date, String year) throws InterruptedException {
+		driver.findElement(By.xpath("//input[@id='datepicker']")).click();
+
+		while (true) {
+			String actualMonth = driver.findElement(By.xpath("//span[@class='ui-datepicker-month']")).getText();
+			String actualYear = driver.findElement(By.xpath("//span[@class='ui-datepicker-year']")).getText();
+			if (month.equals(actualMonth) && year.equals(actualYear)) {
+				System.out.println("Actual Month & Year selected: " + actualMonth + " " + actualYear);
+				break;
+			}
+			driver.findElement(By.xpath("//span[@class='ui-icon ui-icon-circle-triangle-e'][text()='Next']")).click();
+		}
+
+		Thread.sleep(3000);
+
+		List<WebElement> allDates = driver
+				.findElements(By.xpath("//table[@class='ui-datepicker-calendar']//tbody//tr//td//a"));
+
+		for (WebElement dt : allDates) {
+			if (dt.getText().equals(date)) {
+				System.out.println("Actual date selected:" + dt.getText());
+				dt.click();
+				break;
+			}
+		}
+
+	}
+
+	static void selectPastDate(String month, String date, String year) throws InterruptedException {
+		driver.findElement(By.xpath("//input[@id='datepicker']")).click();
+
+		while (true) {
+			String expectedMonth = driver.findElement(By.xpath("//span[@class='ui-datepicker-month']")).getText();
+			String expectedYear = driver.findElement(By.xpath("//span[@class='ui-datepicker-year']")).getText();
+			if (month.equals(expectedMonth) && year.equals(expectedYear)) {
+				break;
+			}
+			driver.findElement(By.xpath("//span[@class='ui-icon ui-icon-circle-triangle-w'][text()='Prev']")).click();
+		}
+
+		Thread.sleep(3000);
+
+		List<WebElement> allDates = driver
+				.findElements(By.xpath("//table[@class='ui-datepicker-calendar']//tbody//tr//td//a"));
+
+		for (WebElement dt : allDates) {
+			if (dt.getText().equals(date)) {
+				System.out.println("Actual date selected:" + dt.getText());
+				dt.click();
+				break;
+			}
+		}
+
 	}
 
 	static void stop() {
